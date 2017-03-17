@@ -121,7 +121,7 @@ count_files_in_dir() {
 
 ##########
 
-if [[ "$#" != "2" ]];
+if [[ "$#" != "2" ]]; then
   usage
   exit 1
 fi
