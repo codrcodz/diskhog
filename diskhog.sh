@@ -70,7 +70,7 @@ slow() {
 
 update_locatedb() {
   locatedb="/var/lib/mlocate/mlocate.db"
-  db_old=$(find ${locatedb} -mmin +30)
+  db_old=$(sudo find ${locatedb} -mmin +30)
   if [ -n "${db_old}" ]; then
     if [[ "${db_old}" == "1" ]]; then
       nice -n -20 updatedb
