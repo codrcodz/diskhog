@@ -69,15 +69,15 @@ slow() {
 ##########
 
 update_locatedb() {
-  locatedb=$(sudo strace locate "" 2>&1 | egrep -o "/(.*/){1,}.*\.db" | head -n 1)
-  if [[ -e "${locatedb}" ]]; then
-    db_old=$(find ${locatedb} -mmin +30)
+  locatedb="/var/lib/mlocate/mlocate.db"
+  db_old=$(find ${locatedb} -mmin +30)
+  if [ -n "${db_old}" ]; then
+    if [[ "${db_old}" == "1" ]]; then
+      nice -n -20 updatedb
+    fi
   else
     printf "no locatedb found; exiting.\n"
     exit 1
-  fi
-  if [[ ${db_old} == "1" ]]; then
-    nice -n -20 updatedb;
   fi
 }
 
