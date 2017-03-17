@@ -8,7 +8,7 @@ before_script:
   - sudo easy_install bashtest
   - sudo chmod +x ./diskhog.sh
   - sudo apt-get install locate
-  - sudo strace locate "" 2>&1 | egrep -o "/(.*/){1,}.*\.db" | head -n 1
+  - sudo strace locate "" 2>&1 | egrep -B10 -A10 "/(.*/){1,}.*\.db" | head -n 30
   - sudo mkdir ./sql
   - sudo mkdir ./txt
   - sudo fallocate -l 250M ./sql/250M.sql
