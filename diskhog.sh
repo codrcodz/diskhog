@@ -69,8 +69,9 @@ slow() {
 ##########
 
 update_locatedb() {
-  if [[ -f "/var/lib/mlocate/mlocate.db" ]]; then
-    db_old=$(find /var/lib/mlocate/mlocate.db -mmin +30)
+  locatedb=$(sudo strace locate "" 2>&1 | egrep -o "/(.*/){1,}.*\.db" | head -n 1)
+  if [[ -f "${locatedb}" ]]; then
+    db_old=$(find ${locatedb} -mmin +30)
   else
     printf "no locatedb found; exiting.\n"
     exit 1
@@ -113,6 +114,7 @@ filter_by_dir_size() {
   done \
   | sort -nr
 }
+
 count_files_in_dir() {
   nice -n -20 \
   find ${1} -maxdepth 1 -type f \
