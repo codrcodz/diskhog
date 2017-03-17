@@ -40,13 +40,13 @@ slow() {
     du -smx ${_dir}
   done \
   | sort -nr \
-  while read _size _path; do
-    if [[ "$_size" >= "$min_file_size" ]]; then
-      printf "$_size\t$_path";
-    fi
-  done \
-  | sort -nr \
-  | head -n 100;
+  | while read _size _path; do \
+      if [[ "$_size" >= "$min_file_size" ]]; then
+        printf "$_size\t$_path";
+      fi
+    done \
+    | sort -nr \
+    | head -n 100;
   printf "--- End of List ---\n";
 }
 
