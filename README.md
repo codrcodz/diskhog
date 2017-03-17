@@ -1,2 +1,2 @@
 # diskhog
-A script for finding the processes on the server that are hogging disk space.
+A script for finding the files/directories on the server that are hogging disk space.
