@@ -1,0 +1,19 @@
+os:
+  -linux
+
+language:
+  - bash
+
+before_script:
+  - sudo easy_install bashtest
+  - sudo chmod +x ./diskhog.sh
+  - sudo fallocate -l 250M ./250M.{sql,txt}
+  - sudo fallocate -l 50M ./50M.{sql,txt}
+  
+
+script:
+  - bashtest ./test/fastest_test.bashtest
+  - bashtest ./test/faster_test.bashtest
+  - bashtest ./test/fast_test.bashtest
+  - bashtest ./test/slow_test.bashtest
+
