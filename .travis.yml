@@ -9,6 +9,10 @@ before_script:
   - sudo chmod +x ./diskhog.sh
   - sudo fallocate -l 250M ./250M.{sql,txt}
   - sudo fallocate -l 50M ./50M.{sql,txt}
+  - sudo ./diskhog.sh --fastest 50
+  - sudo ./diskhog.sh --faster 50
+  - sudo ./diskhog.sh --fast 250
+  - sudo ./diskhog.sh --slow 250
   
 
 script:
