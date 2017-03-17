@@ -1,11 +1,27 @@
 #!/usr/bin/env bash
 
+##########
+
 subcommand=${1};
-min_file_size=250;
 min_file_size=${2};
 declare -a search_dirs_array;
 
 ##########
+
+usage() {
+  echo "  Diskhog finds large files and/or directories on a server."
+  echo ""
+  echo "  Usage: diskhog -fff|ff|f|s|h megabytes"
+  echo ""
+  echo "    -fff|--fastest  Only show directories likely to contain large files."
+  echo "     -ff|--faster   Show search results for commonly large file types."
+  echo "      -f|--fast     Show 50 largest files in \"/\" directory."
+  echo "      -s|--slow     Show 100 largest directories in \"/\" directory."
+  echo "      -h|--help     Display is usage message."
+  echo ""
+  echo "      megabytes     Whole number of megabytes of minimum file/dir size to find."
+  echo ""
+}
 
 fastest() {
   update_locatedb;
@@ -77,7 +93,7 @@ prefilter_with_locate() {
  }
 
 filter_by_file_size() {
-  unset $depth
+  unset depth
   if [[ "$subcommand" == "faster" ]]; then
     depth="--maxdepth 1"
   fi
@@ -88,6 +104,7 @@ filter_by_file_size() {
       -size +${min_file_size}M \
       -exec du -mx '{}' \; 2>&1 \
   | sort -nr;
+  unset depth
 }
 
 filter_by_dir_size() {
@@ -104,21 +121,30 @@ count_files_in_dir() {
 
 ##########
 
+if [[ "$#" != "2" ]];
+  usage
+  exit 1
+fi
+
 case $subcommand in
-  fastest)
+  --fastest|-fff)
     fastest
     ;;
-  faster)
+  --faster|-ff)
     faster
     ;;
-  fast)
+  --fast|-f)
     fast
     ;;
-  slow)
+  --slow|-s)
     slow
     ;;
+  --help|-h)
+    usage
+    exit 0
+    ;;
   *)
+    usage
     exit 1
     ;;
 esac
-
