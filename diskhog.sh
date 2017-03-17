@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-subcommand=${1}
+subcommand=${1};
 min_file_size=250;
 min_file_size=${2};
 declare -a search_dirs_array;
@@ -12,7 +12,7 @@ fastest() {
   printf "MB\tDirectories Most Likey to Contain Large and/or Numerous Files\n";
   prefilter_with_locate;
   filter_by_dir_size;
-  printf "--- End of List ---\n";
+  printf "End of List\n";
 }
 
 faster() {
@@ -24,14 +24,14 @@ faster() {
     printf "MB\tSelect Large Files in ${_dir} (>=${min_file_size}MB)\n";
     filter_by_file_size ${_dir};
   done
-  printf "--- End of List ---\n";
+  printf "End of List\n";
 }
 
 fast() {
   printf "MB\t50 Largest Files in "/" (>=${min_file_size}MB)\n";
-  filter_by_file_size / \
-  | head -n 50
-  printf "--- End of List ---\n";
+  filter_by_file_size "/" \
+  | head -n 50;
+  printf "End of List\n";
 }
 
 slow() {
@@ -40,14 +40,14 @@ slow() {
     du -smx ${_dir}
   done \
   | sort -nr \
-  | while read _size _path; do \
-      if [[ "$_size" >= "$min_file_size" ]]; then
+  | while read _size _path; do
+      if [[ "$_size" -gt "$min_file_size" ]]; then
         printf "$_size\t$_path";
       fi
     done \
     | sort -nr \
     | head -n 100;
-  printf "--- End of List ---\n";
+  printf "End of List\n";
 }
 
 ##########
@@ -55,6 +55,9 @@ slow() {
 update_locatedb() {
   if [[ -f "/var/lib/mlocate/mlocate.db" ]]; then
     db_old=$(find /var/lib/mlocate/mlocate.db -mmin +30)
+  else
+    printf "no locatedb found; exiting.\n"
+    exit 1
   fi
   if [[ ${db_old} == "1" ]]; then
     nice -n -20 updatedb;
@@ -62,10 +65,10 @@ update_locatedb() {
 }
 
 prefilter_with_locate() {
-  locate -bi0 --regex '(sql$|bak$|zip$|log$|tar$|csv$|tgz$|mp4$|png$)'; \
-  | xargs -0 -I % dirname %; \
-  | sort; \
-  | uniq; \
+  locate -bi0 --regex '(sql$|bak$|zip$|log$|tar$|csv$|tgz$|mp4$|png$)' \
+  | xargs -0 -I % dirname % \
+  | sort \
+  | uniq \
   | while read -r _dir; do 
       if [[ -d "${_dir}" ]]; then
         search_dirs_array+=( '${_dir}' )
@@ -74,9 +77,13 @@ prefilter_with_locate() {
  }
 
 filter_by_file_size() {
+  unset $depth
+  if [[ "$subcommand" == "faster" ]]; then
+    depth="--maxdepth 1"
+  fi
   nice -n -20 \
     find ${1} \
-      -maxdepth 1 \
+      ${depth} \
       -type f \
       -size +${min_file_size}M \
       -exec du -mx '{}' \; 2>&1 \
@@ -97,7 +104,7 @@ count_files_in_dir() {
 
 ##########
 
-case subcommand in
+case $subcommand in
   fastest)
     fastest
     ;;
@@ -114,3 +121,4 @@ case subcommand in
     exit 1
     ;;
 esac
+
