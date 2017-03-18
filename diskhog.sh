@@ -69,15 +69,10 @@ slow() {
 ##########
 
 update_locatedb() {
-  locatedb="/var/lib/mlocate/mlocate.db"
-  db_old=$(sudo find ${locatedb} -mmin +30)
-  if [ -n "${db_old}" ]; then
-    if [[ "${db_old}" == "1" ]]; then
-      nice -n -20 updatedb
-    fi
-  else
-    printf "no locatedb found; exiting.\n"
-    exit 1
+  which locate || echo "Install locate" && exit 1
+  db_old=$(find /var/lib/mlocate/mlocate.db -mmin +30 | wc -l)
+  if [[ "${db_old}" == "1" ]]; then
+    nice -n -20 updatedb
   fi
 }
 
