@@ -20,10 +20,10 @@ pipeline {
                 sh "./diskhog.sh --faster 50"
                 sh "./diskhog.sh --fast 250"
                 sh "./diskhog.sh --slow 250"
-                sh bashtest ./test/fastest_test.bashtest
-                sh bashtest ./test/faster_test.bashtest
-                sh bashtest ./test/fast_test.bashtest
-                sh bashtest ./test/slow_test.bashtest
+                sh "bashtest ./test/fastest_test.bashtest"
+                sh "ashtest ./test/faster_test.bashtest"
+                sh "bashtest ./test/fast_test.bashtest"
+                sh "bashtest ./test/slow_test.bashtest"
             }
         }
         stage('Deploy') {
