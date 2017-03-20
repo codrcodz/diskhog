@@ -20,10 +20,10 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing..'
-                sh bashtest ./test/fastest_test.bashtest
-                sh bashtest ./test/faster_test.bashtest
-                sh bashtest ./test/fast_test.bashtest
-                sh bashtest ./test/slow_test.bashtest
+                sh "bashtest ./test/fastest_test.bashtest"
+                sh "bashtest ./test/faster_test.bashtest"
+                sh "bashtest ./test/fast_test.bashtest"
+                sh "bashtest ./test/slow_test.bashtest"
             }
         }
         stage('Deploy') {
