@@ -5,6 +5,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building..'
+                sh "chmod  +x ./diskhog.sh"
                 sh "mkdir ./sql"
                 sh "mkdir ./txt"
                 sh "fallocate -l 250M ./sql/250M.sql"
