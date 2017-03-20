@@ -35,7 +35,7 @@ pipeline {
 
     post {
         always {
-            sh "rm -f ./{sql,txt}/*
+            sh "rm -f ./{sql,txt}/*"
             sh "rmdir ./{sql,txt}"
         }
     }
