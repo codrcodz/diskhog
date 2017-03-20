@@ -4,7 +4,8 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Building..'
+                echo "Preparing test environment."
+                sh "chmod +x ./diskhog.sh"
                 sh "mkdir ./sql"
                 sh "mkdir ./txt"
                 sh "fallocate -l 250M ./sql/250M.sql"
@@ -19,7 +20,7 @@ pipeline {
         }
         stage('Test') {
             steps {
-                echo 'Testing..'
+                echo "Testing.."
                 sh "bashtest ./test/fastest_test.bashtest"
                 sh "bashtest ./test/faster_test.bashtest"
                 sh "bashtest ./test/fast_test.bashtest"
@@ -28,7 +29,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                echo 'Deploying....'
+                echo "Deploying...."
             }
         }
     }
